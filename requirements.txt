@@ -1,0 +1,24 @@
+flask==3.0.0
+gunicorn==21.2.0
+
+# Core
+numpy
+Pillow
+requests
+tqdm
+python-dotenv
+
+# OpenCV (headless for servers)
+opencv-python-headless
+
+# PyTorch (CPU only)
+torch
+torchvision
+
+# SAM + GroundingDINO
+segment-anything
+groundingdino-py
+
+# LLMs
+openai
+google-generativeai

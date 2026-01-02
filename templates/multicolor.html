@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Multi-Color Product Editing</h2>
+
+<form method="POST" enctype="multipart/form-data">
+  <label>Upload Multi-Color Product</label><br>
+  <input type="file" name="multicolor_image" required><br><br>
+  <button type="submit">Detect Colors</button>
+</form>
+
+{% if detected_color_list %}
+<hr>
+<h4>Detected Colors</h4>
+<p>{{ detected_color_list | join(", ") }}</p>
+
+<img src="/static/output/{{ multicolor_filename }}" width="400"><br><br>
+
+<form action="/modify-detected-color" method="POST">
+  <input type="hidden" name="filename" value="{{ multicolor_filename }}">
+
+  <label>Select Source Color</label><br>
+  {% for c in detected_color_list %}
+    <input type="radio" name="source_color" value="{{ c }}" required> {{ c }}<br>
+  {% endfor %}
+
+  <br>
+  <label>Change To</label><br>
+  <select name="target_color">
+    <option>Red</option>
+    <option>Green</option>
+    <option>Blue</option>
+    <option>Black</option>
+  </select><br><br>
+
+  <button type="submit">Apply</button>
+</form>
+{% endif %}
+
+{% if detected_result %}
+<hr>
+<h4>Modified Result</h4>
+<img src="/static/output/{{ detected_result }}?v={{ ts }}" width="400">
+{% endif %}
+
+<br><br>
+<a href="/">⬅ Back to Dashboard</a>
+
+</body>
+</html>

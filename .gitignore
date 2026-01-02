@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+
+# Model weights
+*.pth
+
+# GroundingDINO / SAM weights
+Grounded-Segment-Anything/weights/
+*.pth
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Outputs (optional but recommended)
+static/tmp/*
+static/output/*

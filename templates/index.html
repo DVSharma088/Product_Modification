@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Image Studio</title>
+  <style>
+    body { font-family: Arial; background:#f4f6f8; padding:40px }
+    h1 { margin-bottom: 30px }
+    .grid {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:20px
+    }
+    .card {
+      background:white;
+      padding:25px;
+      border-radius:10px;
+      text-align:center;
+      cursor:pointer;
+      box-shadow:0 4px 10px rgba(0,0,0,0.1);
+      font-weight: bold;
+    }
+    .card:hover { transform: scale(1.04); }
+  </style>
+</head>
+<body>
+
+<h1>🧠 AI Image Modifier Suite</h1>
+
+<div class="grid">
+  <div class="card" onclick="location.href='/background'">Background (Wall)</div>
+  <div class="card" onclick="location.href='/flooring'">Flooring</div>
+  <div class="card" onclick="location.href='/product-color'">Product / Lace Color</div>
+  <div class="card" onclick="location.href='/multi-color'">Multi-Color Product</div>
+  <div class="card" onclick="location.href='/object-change'">Object Change</div>
+  <div class="card" onclick="location.href='/product-replace'">Product Replacement</div>
+</div>
+
+</body>
+</html>

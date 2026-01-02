@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product / Lace Color Change</title>
+</head>
+<body>
+
+<h2>Product / Lace Color Change</h2>
+
+<form method="POST" action="/product-color" enctype="multipart/form-data">
+
+  <label><b>Upload Product Image</b></label><br>
+  <input type="file" name="target_image" required><br><br>
+
+  <label><b>Change</b></label><br>
+  <select name="color_target">
+    <option value="product">Product</option>
+    <option value="lace">Lace</option>
+  </select><br><br>
+
+  <label><b>Select Colors</b></label><br><br>
+
+  <label><input type="checkbox" name="colors" value="Midnight Green"> Midnight Green</label><br>
+  <label><input type="checkbox" name="colors" value="Charcoal Drift"> Charcoal Drift</label><br>
+  <label><input type="checkbox" name="colors" value="Burl Wood"> Burl Wood</label><br>
+  <label><input type="checkbox" name="colors" value="Sage Green"> Sage Green</label><br>
+  <label><input type="checkbox" name="colors" value="Pacific Blue"> Pacific Blue</label><br>
+  <label><input type="checkbox" name="colors" value="Angora White"> Angora White</label><br>
+  <label><input type="checkbox" name="colors" value="Oatmeal"> Oatmeal</label><br>
+  <label><input type="checkbox" name="colors" value="Misty Lilac"> Misty Lilac</label><br>
+  <label><input type="checkbox" name="colors" value="Rose Wood"> Rose Wood</label><br>
+  <label><input type="checkbox" name="colors" value="Berry Blush"> Berry Blush</label><br>
+  <label><input type="checkbox" name="colors" value="Sunbrunt Yellow"> Sunbrunt Yellow</label><br>
+  <label><input type="checkbox" name="colors" value="Olive Mist"> Olive Mist</label><br>
+  <label><input type="checkbox" name="colors" value="Muted Lime"> Muted Lime</label><br>
+  <label><input type="checkbox" name="colors" value="Muted Mocha"> Muted Mocha</label><br>
+  <label><input type="checkbox" name="colors" value="Brown Bean"> Brown Bean</label><br>
+  <label><input type="checkbox" name="colors" value="Petal Pink"> Petal Pink</label><br>
+  <label><input type="checkbox" name="colors" value="Wild Wind"> Wild Wind</label><br>
+
+  <br>
+  <button type="submit">Generate</button>
+</form>
+
+{% if results %}
+<hr>
+<h3>Generated Results</h3>
+
+{% for r in results %}
+  <p><b>{{ r.label }}</b></p>
+  <img src="/static/output/{{ r.filename }}?v={{ ts }}" width="400"><br><br>
+{% endfor %}
+{% endif %}
+
+</body>
+</html>

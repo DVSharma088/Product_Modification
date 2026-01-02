@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Object / Accessory Replacement</h2>
+
+<form method="POST" enctype="multipart/form-data">
+  <label>Upload Image</label><br>
+  <input type="file" name="accessory_image" required><br><br>
+
+  <label>Select New Accessory</label><br>
+  <select name="new_accessory">
+    <option value="Wooden Tray with Cups">Wooden Tray with Cups</option>
+    <option value="Ceramic Bowl">Ceramic Bowl</option>
+    <option value="Plate">Plate</option>
+    <option value="Candle">Candle</option>
+  </select><br><br>
+
+  <button type="submit">Replace</button>
+</form>
+
+{% if replaced_accessory_image %}
+<hr>
+<img src="/static/output/{{ replaced_accessory_image }}?v={{ ts }}" width="400"><br><br>
+<a href="/static/output/{{ replaced_accessory_image }}" download>Download</a>
+{% endif %}
+
+<br>
+<a href="/">⬅ Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Product Replacement</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      padding: 40px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      width: 650px;
+      border-radius: 10px;
+    }
+
+    .item {
+      margin-bottom: 12px;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .item label {
+      font-weight: bold;
+      margin-left: 6px;
+    }
+
+    img {
+      max-width: 100%;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+
+    .upload-box {
+      margin-left: 24px;
+      margin-top: 6px;
+    }
+  </style>
+
+  <script>
+    function toggleUpload(cb, id) {
+      document.getElementById(id).style.display =
+        cb.checked ? "block" : "none";
+    }
+  </script>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Multi Product Replacement</h2>
+
+  <!-- ================= STEP 1 ================= -->
+  {% if not items %}
+    <form method="POST" enctype="multipart/form-data">
+      <b>Upload Image</b><br><br>
+      <input type="file" name="setup" required><br><br>
+      <button type="submit">Analyze Image</button>
+    </form>
+  {% endif %}
+
+  <!-- ================= STEP 2 ================= -->
+  {% if items %}
+    <hr>
+
+    <form method="POST"
+          action="/product-replace/replace"
+          enctype="multipart/form-data">
+
+      <!-- Persist analyzed image -->
+      <input type="hidden" name="setup_path" value="{{ setup_path }}">
+
+      <b>Select items & upload replacement images</b><br><br>
+
+      {% for item in items %}
+        <div class="item">
+          <input type="checkbox"
+                 id="item_{{ loop.index }}"
+                 name="selected_items"
+                 value="{{ item }}"
+                 onchange="toggleUpload(this, 'upload_{{ loop.index }}')">
+
+          <label for="item_{{ loop.index }}">
+            {{ loop.index }}. {{ item }}
+          </label>
+
+          <div id="upload_{{ loop.index }}"
+               class="upload-box"
+               style="display:none;">
+            <input type="file" name="product_{{ loop.index }}">
+            <input type="hidden"
+                   name="item_key_{{ loop.index }}"
+                   value="{{ item }}">
+          </div>
+        </div>
+      {% endfor %}
+
+      <br>
+      <button type="submit">Apply Changes</button>
+    </form>
+  {% endif %}
+
+  <!-- ================= OUTPUT ================= -->
+  {% if output %}
+    <hr>
+    <h3>Updated Image</h3>
+    <img src="data:image/png;base64,{{ output }}">
+  {% endif %}
+</div>
+
+</body>
+</html>

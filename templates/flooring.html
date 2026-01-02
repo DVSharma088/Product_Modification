@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<body>
+
+<h2>Floor Replacement</h2>
+
+<form method="POST" enctype="multipart/form-data">
+  <label>Upload Room Image</label><br>
+  <input type="file" name="target_image" required><br><br>
+
+  <label>Upload Floor Texture</label><br>
+  <input type="file" name="floor_image" required><br><br>
+
+  <button type="submit">Generate</button>
+</form>
+
+{% if output %}
+<hr>
+<img src="/static/output/{{ output }}" width="600"><br><br>
+<a href="/static/output/{{ output }}" download>Download</a>
+{% endif %}
+
+<br><br>
+<a href="/">⬅ Back to Dashboard</a>
+
+</body>
+</html>
