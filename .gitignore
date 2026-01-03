@@ -20,3 +20,6 @@ Thumbs.db
 # Outputs (optional but recommended)
 static/tmp/*
 static/output/*
+
+# Runtime-downloaded models
+models/
