@@ -1,7 +1,7 @@
 import os
 import torch
 import requests
-import groundingdino
+import importlib.resources as pkg_resources
 
 from groundingdino.util.inference import load_model
 from segment_anything import sam_model_registry, SamPredictor
@@ -20,12 +20,11 @@ MODEL_DIR = os.path.join(BASE_DIR, "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 # =========================================================
-# GROUNDING DINO
+# GROUNDING DINO CONFIG (PACKAGE SAFE)
 # =========================================================
-DINO_CONFIG = os.path.join(
-    os.path.dirname(groundingdino.__file__),
-    "config",
-    "GroundingDINO_SwinT_OGC.py"
+DINO_CONFIG = str(
+    pkg_resources.files("groundingdino")
+    .joinpath("config", "GroundingDINO_SwinT_OGC.py")
 )
 
 DINO_CHECKPOINT = os.path.join(
@@ -52,29 +51,40 @@ SAM_URL = (
 )
 
 # =========================================================
-# DOWNLOAD UTIL
+# SAFE DOWNLOAD (handles corrupted / partial files)
 # =========================================================
-def download_if_missing(path: str, url: str):
+def download_if_missing(path: str, url: str, min_size_mb: int):
+    """
+    Download model if missing or corrupted.
+    - GroundingDINO ≈ 700 MB
+    - SAM ViT-B ≈ 375 MB
+    """
     if os.path.exists(path):
-        return
+        size_mb = os.path.getsize(path) / (1024 * 1024)
+        if size_mb >= min_size_mb:
+            return
+        else:
+            print(f"⚠️ Corrupted file detected ({size_mb:.1f} MB), re-downloading {os.path.basename(path)}")
+            os.remove(path)
 
     print(f"⬇️ Downloading {os.path.basename(path)}")
-    with requests.get(url, stream=True) as r:
+    with requests.get(url, stream=True, timeout=300) as r:
         r.raise_for_status()
         with open(path, "wb") as f:
             for chunk in r.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
+
     print(f"✅ Downloaded {os.path.basename(path)}")
 
 # =========================================================
-# ENSURE MODELS
+# ENSURE MODEL FILES
 # =========================================================
-download_if_missing(DINO_CHECKPOINT, DINO_URL)
-download_if_missing(SAM_CHECKPOINT, SAM_URL)
+download_if_missing(DINO_CHECKPOINT, DINO_URL, min_size_mb=600)
+download_if_missing(SAM_CHECKPOINT, SAM_URL, min_size_mb=300)
 
 # =========================================================
-# LOAD MODELS
+# LOAD MODELS (CPU ONLY)
 # =========================================================
 print("🔹 Loading GroundingDINO (CPU)")
 dino_model = load_model(
