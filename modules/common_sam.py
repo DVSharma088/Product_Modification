@@ -1,6 +1,7 @@
 import os
 import torch
 import requests
+import groundingdino
 
 from groundingdino.util.inference import load_model
 from segment_anything import sam_model_registry, SamPredictor
@@ -12,16 +13,17 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 device = torch.device("cpu")
 
 # =========================================================
-# PATHS
+# BASE PATHS
 # =========================================================
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_DIR = os.path.join(BASE_DIR, "models")
-
 os.makedirs(MODEL_DIR, exist_ok=True)
 
-# ---------------- GroundingDINO ----------------
+# =========================================================
+# GROUNDING DINO
+# =========================================================
 DINO_CONFIG = os.path.join(
-    os.path.dirname(load_model.__file__),
+    os.path.dirname(groundingdino.__file__),
     "config",
     "GroundingDINO_SwinT_OGC.py"
 )
@@ -36,7 +38,9 @@ DINO_URL = (
     "v0.1.0-alpha/groundingdino_swint_ogc.pth"
 )
 
-# ---------------- SAM ----------------
+# =========================================================
+# SAM
+# =========================================================
 SAM_CHECKPOINT = os.path.join(
     MODEL_DIR,
     "sam_vit_b_01ec64.pth"
@@ -48,31 +52,29 @@ SAM_URL = (
 )
 
 # =========================================================
-# UTIL: SAFE DOWNLOAD
+# DOWNLOAD UTIL
 # =========================================================
 def download_if_missing(path: str, url: str):
     if os.path.exists(path):
         return
 
     print(f"⬇️ Downloading {os.path.basename(path)}")
-
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
         with open(path, "wb") as f:
             for chunk in r.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
-
     print(f"✅ Downloaded {os.path.basename(path)}")
 
 # =========================================================
-# DOWNLOAD MODELS IF NEEDED
+# ENSURE MODELS
 # =========================================================
 download_if_missing(DINO_CHECKPOINT, DINO_URL)
 download_if_missing(SAM_CHECKPOINT, SAM_URL)
 
 # =========================================================
-# LOAD MODELS (CPU)
+# LOAD MODELS
 # =========================================================
 print("🔹 Loading GroundingDINO (CPU)")
 dino_model = load_model(
